@@ -1,500 +1,176 @@
-# Interview Tracker - Frontend
+# Interview Tracker Frontend
 
-> A modern React application for tracking job applications and interview progress with real-time analytics
+Interview Tracker Frontend is a responsive React application built for job seekers who want a cleaner way to manage applications and understand interview performance. It transforms job-search activity into a focused product experience with dashboards, status tracking, and production-ready UI patterns. The frontend is designed to work with the Spring Boot API and is deployed independently on Vercel.
 
-[![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
-[![Material-UI](https://img.shields.io/badge/Material--UI-5.14.0-blue.svg)](https://mui.com/)
-[![Recharts](https://img.shields.io/badge/Recharts-2.8.0-brightgreen.svg)](https://recharts.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+## 🚀 Key Highlights
 
-## 📋 Overview
+- Full-stack production deployment with Vercel, Render, and Neon
+- Secure JWT authentication integrated with the Spring Boot backend
+- Interactive analytics dashboard with KPI cards, charts, and recent activity
+- Modern responsive UI built with Material UI and Recharts
+- Clean backend integration with a layered Spring Boot architecture
 
-Interview Tracker Frontend is a responsive React application that helps job seekers manage their application process. It provides an intuitive interface for tracking applications, interview rounds, and visualizing success metrics through interactive charts and analytics.
+## 📌 Project Purpose
 
-**Live Demo**: https://interview-tracker-frontend-txa4.vercel.app/
+The frontend exists to give job seekers a simple, reliable workspace for tracking progress across applications, interview rounds, and outcomes. It focuses on fast scanning, better visual hierarchy, and an experience that feels closer to a shipped product than a basic CRUD demo.
 
-**Backend Repository**: [interview-tracker-backend](https://github.com/Anirudh1307/interview-tracker-backend)
+## ✨ Advanced Features
 
----
+- Responsive and modern UI design system with reusable surfaces, headers, and form layouts
+- Smooth animations, hover states, skeleton loaders, and polished interaction feedback
+- Secure API integration with token-based authentication and protected requests
+- Scalable frontend structure with shared theme configuration and reusable UI building blocks
+- Analytics with data visualization for status distribution, offer rate, recent activity, and monthly trends
 
-## ✨ Features
+## Overview
 
-### 🔐 Authentication
-- User registration with email validation
-- Secure login with JWT token storage
-- Password strength validation
-- Persistent sessions with localStorage
-- Auto-logout on token expiration
+This frontend solves a real workflow problem: keeping applications organized without relying on spreadsheets or scattered notes. It gives users a modern interface for managing opportunities, reviewing progress, and spotting trends across the hiring pipeline. The result is a portfolio-ready React application with clear product value and production-style deployment.
 
-### 📊 Dashboard Analytics
-- **Total Applications**: Track all submitted applications
-- **Total Interviews**: Count of interview rounds completed
-- **Total Offers**: Number of job offers received
-- **Offer Rate**: Success percentage calculation
-- **Active Applications**: Applications in progress (excludes offered/rejected)
-- **Status Distribution**: Pie chart showing application status breakdown
-- **Recent Activity**: Last 5 applications with status badges
-- **Monthly Trends**: Line chart displaying 6-month application trends
+## Live Application
 
-### 💼 Job Management
-- Create new job applications with company, role, date, and status
-- Edit existing applications
-- Delete applications (with confirmation)
-- Status tracking: APPLIED → OA → INTERVIEW → HR → OFFERED/REJECTED
-- Real-time updates to dashboard
+- Frontend: https://interview-tracker-frontend-txa4.vercel.app/
+- Backend API: https://interview-tracker-backend-tkf4.onrender.com
 
-### 📱 Responsive Design
-- Mobile-first approach
-- Tablet and desktop optimized
-- Touch-friendly interface
-- Adaptive layouts using Material-UI Grid/Stack
-
-### 🎨 Modern UI/UX
-- Material-UI components with custom theme
-- Smooth animations and transitions
-- Hover effects on cards and buttons
-- Loading skeletons for better UX
-- Toast notifications for user feedback
-- Color-coded status badges
-
----
-
-## 🚀 Tech Stack
+## Tech Stack
 
 | Technology | Purpose | Version |
 |------------|---------|---------|
-| **React** | UI library | 18.2.0 |
-| **Material-UI (MUI)** | Component library | 5.14.0 |
-| **Recharts** | Data visualization | 2.8.0 |
-| **Axios** | HTTP client | 1.5.0 |
-| **React Toastify** | Notifications | 9.1.3 |
-| **React Router** | Navigation (if added) | - |
+| React | Application framework | 18.2.0 |
+| Material UI | Component system and theming | 7.3.7 |
+| Recharts | Data visualization | 3.7.0 |
+| Axios | API client | 1.6.2 |
+| React Toastify | Notifications | 11.0.5 |
+| React Scripts | Build tooling | 5.0.1 |
 
----
+## UI System
 
-## 📸 Screenshots
+### Theme
+
+The frontend uses a custom Material UI theme focused on readability, polish, and modern contrast.
+
+| Token | Value |
+|------|-------|
+| Primary | `#4F46E5` |
+| Secondary | `#22C55E` |
+| Background | `#F8FAFC` |
+| Surface | `#FFFFFF` |
+| Text Primary | `#0F172A` |
+| Text Secondary | `#64748B` |
+
+### Design Notes
+
+- Rounded surfaces and inputs for a softer, modern look
+- Consistent spacing scale across cards, sections, and forms
+- Elevated primary actions with clearer hover feedback
+- Responsive layouts tuned for mobile, tablet, and desktop
+
+### Status Colors
+
+| Status | Color |
+|--------|-------|
+| Applied | `#4F46E5` |
+| Online Assessment | `#0EA5E9` |
+| Interview | `#F59E0B` |
+| HR Round | `#8B5CF6` |
+| Offered | `#22C55E` |
+| Rejected | `#EF4444` |
+
+## Screenshots
 
 ### Dashboard
-![Dashboard](./screenshots/dashboard.png)
-*Analytics dashboard with KPI cards, charts, and recent activity*
+
+Primary analytics workspace with application KPIs, status distribution, recent activity, and trend visualization.
 
 ### Job Applications
-![Job List](./screenshots/jobs.png)
-*Job applications list with status badges and action buttons*
 
-### Login Page
-![Login](./screenshots/login.png)
-*Clean login interface with form validation*
+Responsive application management view with clear status chips, structured metadata, and focused actions.
 
-### Mobile View
-![Mobile](./screenshots/mobile.png)
-*Responsive design optimized for mobile devices*
+### Authentication
 
-> **Note**: Add screenshots to `/screenshots` folder
+Branded login and registration experience with validation feedback and cleaner visual hierarchy.
 
----
+### Mobile Experience
 
-## 🏗️ Component Architecture
+Stacked layouts and touch-friendly spacing optimized for smaller screens without losing readability.
 
-```
-App.jsx (Root)
-├── Navbar (Navigation & Logout)
-├── Dashboard
-│   ├── StatCard (KPI metrics)
-│   ├── StatusChart (Pie chart)
-│   ├── RecentActivity (Last 5 apps)
-│   └── TrendChart (Line chart)
-├── JobList
-│   ├── JobForm (Create/Edit)
-│   └── JobCard (Display)
-└── Auth
-    ├── Login
-    └── Register
+## Component Structure
+
+```text
+src/
+├── components/
+│   ├── Auth/
+│   ├── Dashboard/
+│   ├── Jobs/
+│   ├── Layout/
+│   └── UI/
+├── services/
+├── App.jsx
+├── index.js
+└── theme.js
 ```
 
-### Component Responsibilities
+## Core Frontend Capabilities
 
-**App.jsx**
-- Manages global state (token, view)
-- Handles authentication flow
-- Provides theme configuration
-- Controls navigation between views
+- Authentication flow for registration and login
+- Dashboard analytics with cards, pie chart, line chart, and recent activity
+- Job application creation and deletion workflows
+- Shared design system through a centralized MUI theme
+- Feedback patterns including loading states and toast notifications
 
-**Dashboard Components**
-- `StatCard`: Reusable KPI card with icon and value
-- `StatusChart`: Pie chart for status distribution
-- `RecentActivity`: List of recent applications
-- `TrendChart`: Line chart for monthly trends
-
-**JobList**
-- Displays all job applications
-- Handles CRUD operations
-- Manages form state
-- Triggers dashboard refresh on changes
-
-**Auth Components**
-- `Login`: User authentication
-- `Register`: New user signup with validation
-
----
-
-## 🛠️ Local Development
+## Local Development
 
 ### Prerequisites
 
-- Node.js 16+ and npm 8+
-- Git
-- Backend API running (see backend README)
+- Node.js 16+
+- npm 8+
+- Running backend API
 
-### Setup Steps
+### Setup
 
-1. **Clone the repository**
 ```bash
 git clone https://github.com/Anirudh1307/interview-tracker-frontend.git
 cd interview-tracker-frontend
-```
-
-2. **Install dependencies**
-```bash
 npm install
 ```
 
-3. **Configure environment**
-```bash
-# Copy example file
-cp .env.example .env
+Create `.env`:
 
-# Edit .env
+```env
 REACT_APP_API_URL=http://localhost:8080
 ```
 
-4. **Start development server**
+Start the development server:
+
 ```bash
 npm start
 ```
 
-5. **Open browser**
-```
-http://localhost:3000
-```
+The app runs at `http://localhost:3000`.
 
-### Available Scripts
+## Production Deployment
 
-```bash
-npm start          # Start development server (port 3000)
-npm run build      # Create production build
-npm test           # Run tests
-npm run eject      # Eject from Create React App (irreversible)
-```
+The frontend is configured for Vercel deployment and consumes the Render-hosted backend through `REACT_APP_API_URL`.
 
----
+### Required Environment Variable
 
-## 🚢 Production Deployment (Vercel)
-
-### Step 1: Prepare for Deployment
-
-1. **Update production environment**
-```bash
-# Edit .env.production
+```env
 REACT_APP_API_URL=https://your-backend.onrender.com
 ```
 
-2. **Test production build locally**
+### Build Command
+
 ```bash
 npm run build
-npx serve -s build
 ```
 
-### Step 2: Deploy to Vercel
+## Project Strengths
 
-1. Push code to GitHub
-```bash
-git add .
-git commit -m "chore: prepare for production deployment"
-git push origin main
-```
+- Strong visual polish with a consistent component system
+- Clear UX improvements around spacing, hierarchy, and responsiveness
+- Practical use of analytics and data visualization
+- Production deployment setup that mirrors real-world workflows
 
-2. Create account at [vercel.com](https://vercel.com)
+## Related Documentation
 
-3. Import repository
-   - Click "Add New" → "Project"
-   - Select `interview-tracker-frontend`
-   - Click "Import"
-
-4. Configure project
-   - **Framework Preset**: Create React App (auto-detected)
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `build`
-
-5. Add environment variable
-   - Key: `REACT_APP_API_URL`
-   - Value: `https://your-backend.onrender.com`
-
-6. Click "Deploy" → Wait 2-5 minutes → Copy URL
-
-### Step 3: Update Backend CORS
-
-Update backend `CORS_ALLOWED_ORIGINS` with your Vercel URL:
-```
-https://your-app.vercel.app
-```
-
----
-
-## 📁 Project Structure
-
-```
-frontend/
-├── public/
-│   ├── index.html              # HTML template
-│   ├── favicon.ico             # App icon
-│   └── manifest.json           # PWA manifest
-├── src/
-│   ├── components/
-│   │   ├── Auth/
-│   │   │   ├── Login.jsx       # Login form
-│   │   │   └── Register.jsx    # Registration form
-│   │   ├── Dashboard/
-│   │   │   ├── Dashboard.jsx   # Main dashboard
-│   │   │   ├── StatCard.jsx    # KPI card component
-│   │   │   ├── StatusChart.jsx # Pie chart
-│   │   │   ├── RecentActivity.jsx  # Recent apps list
-│   │   │   └── TrendChart.jsx  # Line chart
-│   │   ├── Jobs/
-│   │   │   └── JobList.jsx     # Job CRUD operations
-│   │   └── Layout/
-│   │       └── Navbar.jsx      # Navigation bar
-│   ├── services/
-│   │   └── api.js              # Axios configuration & API calls
-│   ├── App.jsx                 # Root component
-│   ├── index.js                # Entry point
-│   └── index.css               # Global styles
-├── .env                        # Local environment (gitignored)
-├── .env.example                # Environment template
-├── .env.production             # Production config (gitignored)
-├── .env.production.example     # Production template
-├── .gitignore                  # Git exclusions
-├── package.json                # Dependencies
-├── README.md                   # This file
-└── vercel.json                 # Vercel configuration
-```
-
----
-
-## ⚙️ Environment Variables
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `REACT_APP_API_URL` | Backend API base URL | `https://api.example.com` |
-
-**Development (.env)**
-```env
-REACT_APP_API_URL=http://localhost:8080
-```
-
-**Production (.env.production)**
-```env
-REACT_APP_API_URL=https://your-backend.onrender.com
-```
-
----
-
-## 🎨 Theme Configuration
-
-The app uses a custom Material-UI theme with:
-
-```javascript
-{
-  palette: {
-    primary: { main: '#1976d2' },      // Blue
-    secondary: { main: '#dc004e' },    // Pink
-    background: {
-      default: '#f5f7fa',              // Light gray
-      paper: '#ffffff'                 // White
-    }
-  },
-  components: {
-    MuiCard: {
-      // Hover effects on cards
-    },
-    MuiButton: {
-      // Smooth transitions on buttons
-    }
-  }
-}
-```
-
-### Status Colors
-
-```javascript
-APPLIED:    '#1976d2'  // Blue
-OA:         '#9c27b0'  // Purple
-INTERVIEW:  '#ed6c02'  // Orange
-HR:         '#0288d1'  // Light Blue
-OFFERED:    '#2e7d32'  // Green
-REJECTED:   '#d32f2f'  // Red
-```
-
----
-
-## 🔌 API Integration
-
-### API Service (`services/api.js`)
-
-```javascript
-// Axios instance with base URL
-const api = axios.create({
-  baseURL: `${API_URL}/api`,
-  headers: { 'Content-Type': 'application/json' }
-});
-
-// Request interceptor (adds JWT token)
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem('token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
-  return config;
-});
-
-// Response interceptor (handles errors)
-api.interceptors.response.use(
-  response => response,
-  error => {
-    toast.error(error.response?.data?.message || 'An error occurred');
-    return Promise.reject(error);
-  }
-);
-```
-
-### Service Methods
-
-```javascript
-// Authentication
-authService.register(data)
-authService.login(data)
-
-// Job Applications
-jobService.getAll()
-jobService.create(data)
-jobService.update(id, data)
-jobService.delete(id)
-
-// Analytics
-analyticsService.get()
-```
-
----
-
-## 📊 Dashboard Analytics Explained
-
-### KPI Cards
-
-1. **Total Applications**: Count of all job applications
-2. **Total Interviews**: Sum of all interview rounds across jobs
-3. **Total Offers**: Count of applications with status "OFFERED"
-4. **Offer Rate**: `(Total Offers / Total Applications) × 100`
-5. **Active Applications**: Applications not in OFFERED or REJECTED status
-
-### Status Distribution (Pie Chart)
-
-Shows percentage breakdown of applications by status:
-- APPLIED, OA, INTERVIEW, HR, OFFERED, REJECTED
-
-### Recent Activity
-
-Displays last 5 applications with:
-- Company name
-- Role
-- Applied date
-- Status badge (color-coded)
-
-### Monthly Trends (Line Chart)
-
-6-month trend showing:
-- Total applications per month
-- Total interviews per month
-- Total offers per month
-
----
-
-## 🎯 Best Practices Implemented
-
-- ✅ Component-based architecture
-- ✅ Separation of concerns (components, services, styles)
-- ✅ Environment-based configuration
-- ✅ Error handling with user-friendly messages
-- ✅ Loading states for better UX
-- ✅ Responsive design (mobile-first)
-- ✅ Accessibility considerations
-- ✅ Code reusability (StatCard, API service)
-- ✅ Consistent naming conventions
-- ✅ Clean folder structure
-
----
-
-## 🔮 Future Enhancements
-
-- [ ] Add React Router for multi-page navigation
-- [ ] Implement search and filter for job list
-- [ ] Add sorting options (by date, company, status)
-- [ ] Create interview round management UI
-- [ ] Add export functionality (CSV, PDF)
-- [ ] Implement dark mode toggle
-- [ ] Add profile page with user settings
-- [ ] Create notification system for upcoming interviews
-- [ ] Add calendar view for interview dates
-- [ ] Implement drag-and-drop for status updates
-- [ ] Add company logo integration
-- [ ] Create onboarding tutorial for new users
-
----
-
-## 🐛 Known Issues
-
-- None currently reported
-
----
-
-## 📝 License
-
-This project is licensed under the MIT License.
-
----
-
-## 👤 Author
-
-**Anirudh**
-
-- GitHub: [@Anirudh1307](https://github.com/Anirudh1307)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/your-profile)
-- Portfolio: [Your Portfolio](https://your-portfolio.com)
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome!
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
-
----
-
-## 📞 Support
-
-For support, email your-email@example.com or open an issue.
-
----
-
-## 🙏 Acknowledgments
-
-- [Material-UI](https://mui.com/) for the component library
-- [Recharts](https://recharts.org/) for data visualization
-- [React Toastify](https://fkhadra.github.io/react-toastify/) for notifications
-- [Vercel](https://vercel.com/) for hosting
-
----
-
-**⭐ Star this repository if you found it helpful!**
+- Backend README: [../backend/README.md](../backend/README.md)
+- Root project README: [../README.md](../README.md)
