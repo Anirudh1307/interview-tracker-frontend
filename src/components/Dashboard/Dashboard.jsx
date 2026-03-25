@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Button, Skeleton, Alert } from '@mui/material';
-import { Work, EmojiEvents, TrendingUp, Assignment, Add } from '@mui/icons-material';
+import { Alert, Box, Button, Skeleton, Stack } from '@mui/material';
+import {
+  AddRounded as Add,
+  AssignmentRounded as Assignment,
+  EmojiEventsRounded as EmojiEvents,
+  TrendingUpRounded as TrendingUp,
+  WorkOutlineRounded as Work
+} from '@mui/icons-material';
 import { analyticsService } from '../../services/api';
 import StatCard from './StatCard';
 import StatusChart from './StatusChart';
 import RecentActivity from './RecentActivity';
 import TrendChart from './TrendChart';
+import PageHeader from '../UI/PageHeader';
 
 function Dashboard({ setView }) {
   const [analytics, setAnalytics] = useState(null);
@@ -19,63 +26,92 @@ function Dashboard({ setView }) {
   const loadAnalytics = () => {
     setLoading(true);
     setError(null);
+
     analyticsService.get()
       .then(({ data }) => {
-        console.log('Analytics data:', data);
         setAnalytics(data.data || data);
         setLoading(false);
       })
-      .catch(err => {
-        console.error('Analytics error:', err);
-        setError('Failed to load analytics');
+      .catch(() => {
+        setError('Failed to load analytics. Please login again.');
         setLoading(false);
       });
   };
 
   if (loading) {
     return (
-      <Box>
-        <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>Dashboard</Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 3, mb: 3 }}>
-          {[1, 2, 3, 4, 5].map(i => (
-            <Skeleton key={i} variant="rectangular" height={120} sx={{ borderRadius: 2 }} />
+      <Stack spacing={3}>
+        <PageHeader
+          title="Dashboard"
+          description="A polished overview of your applications, interviews, and offers."
+        />
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+            gap: 3
+          }}
+        >
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Skeleton key={i} variant="rectangular" height={156} />
           ))}
         </Box>
-        <Skeleton variant="rectangular" height={300} sx={{ borderRadius: 2 }} />
-      </Box>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', lg: 'minmax(0, 1fr) minmax(0, 0.92fr)' },
+            gap: 3
+          }}
+        >
+          <Skeleton variant="rectangular" height={320} />
+          <Skeleton variant="rectangular" height={320} />
+        </Box>
+        <Skeleton variant="rectangular" height={340} />
+      </Stack>
     );
   }
 
   if (error) {
     return (
-      <Box>
-        <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>Dashboard</Typography>
+      <Stack spacing={3}>
+        <PageHeader
+          title="Dashboard"
+          description="A polished overview of your applications, interviews, and offers."
+        />
         <Alert severity="error" action={
           <Button color="inherit" size="small" onClick={loadAnalytics}>Retry</Button>
         }>
           {error}
         </Alert>
-      </Box>
+      </Stack>
     );
   }
 
   if (!analytics) return null;
 
   return (
-    <Box>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography variant="h4">Dashboard</Typography>
-        <Button
-          variant="contained"
-          startIcon={<Add />}
-          onClick={() => setView('jobs')}
-        >
-          Add Application
-        </Button>
-      </Box>
+    <Stack spacing={3}>
+      <PageHeader
+        title="Dashboard"
+        description="Track progress, spot momentum, and jump back into your application pipeline quickly."
+        actions={(
+          <Button
+            variant="contained"
+            startIcon={<Add />}
+            onClick={() => setView('jobs')}
+          >
+            Add Application
+          </Button>
+        )}
+      />
 
-      {/* KPI Cards */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 3, mb: 3 }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: 3
+        }}
+      >
         <StatCard
           title="Total Applications"
           value={analytics.totalApplications || 0}
@@ -108,15 +144,19 @@ function Dashboard({ setView }) {
         />
       </Box>
 
-      {/* Charts and Activity */}
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, mb: 3 }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', lg: 'minmax(0, 1fr) minmax(0, 0.92fr)' },
+          gap: 3
+        }}
+      >
         <StatusChart statusCounts={analytics.statusCounts || {}} />
         <RecentActivity recentApplications={analytics.recentApplications || []} />
       </Box>
 
-      {/* Trend Chart */}
       <TrendChart monthlyTrends={analytics.monthlyTrends || []} />
-    </Box>
+    </Stack>
   );
 }
 

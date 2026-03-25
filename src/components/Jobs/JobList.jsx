@@ -1,13 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Card, CardContent, Typography, TextField, Button, Select, MenuItem,
-  FormControl, InputLabel, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Chip, IconButton, Dialog, DialogTitle,
-  DialogContent, DialogActions, CircularProgress, Stack
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Skeleton,
+  Stack,
+  TextField,
+  Typography
 } from '@mui/material';
-import { Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
+import {
+  AddRounded as AddIcon,
+  CalendarMonthRounded as CalendarIcon,
+  DeleteOutlineRounded as DeleteIcon,
+  WorkOutlineRounded as WorkIcon
+} from '@mui/icons-material';
 import { toast } from 'react-toastify';
 import { jobService } from '../../services/api';
+import PageHeader from '../UI/PageHeader';
+import SectionCard from '../UI/SectionCard';
+import { statusVisuals } from '../../theme';
 
 function JobList({ onJobAdded }) {
   const [jobs, setJobs] = useState([]);
@@ -27,8 +47,7 @@ function JobList({ onJobAdded }) {
         setJobs(data.data);
         setLoading(false);
       })
-      .catch(err => {
-        console.error(err);
+      .catch(() => {
         setLoading(false);
       });
   };
@@ -43,13 +62,11 @@ function JobList({ onJobAdded }) {
     setSubmitting(true);
     try {
       const response = await jobService.create(form);
-      console.log('Create response:', response);
       toast.success(response.data?.message || 'Job application added successfully!');
       setForm({ companyName: '', role: '', appliedDate: '', status: 'APPLIED' });
       loadJobs();
-      if (onJobAdded) onJobAdded(); // Refresh dashboard
+      if (onJobAdded) onJobAdded();
     } catch (error) {
-      console.error('Create error:', error);
       const errorMsg = error.response?.data?.message || error.message || 'Failed to create job';
       toast.error(errorMsg);
     } finally {
@@ -69,150 +86,247 @@ function JobList({ onJobAdded }) {
   };
 
   const getStatusColor = (status) => {
-    const colors = {
-      APPLIED: 'primary',
-      OA: 'secondary',
-      INTERVIEW: 'warning',
-      HR: 'info',
-      OFFERED: 'success',
-      REJECTED: 'error'
-    };
-    return colors[status] || 'default';
+    return statusVisuals[status]?.chipColor || 'default';
   };
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 8 }}>
-        <CircularProgress />
-      </Box>
+      <Stack spacing={3}>
+        <PageHeader
+          title="Job Applications"
+          description="Manage your pipeline with a cleaner, more readable view."
+        />
+        <Skeleton variant="rectangular" height={220} />
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: 3
+          }}
+        >
+          {[1, 2, 3].map((item) => (
+            <Skeleton key={item} variant="rectangular" height={220} />
+          ))}
+        </Box>
+      </Stack>
     );
   }
 
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
-        Job Applications
-      </Typography>
+    <Stack spacing={3}>
+      <PageHeader
+        title="Job Applications"
+        description="Add new roles, keep statuses current, and scan your opportunities with less friction."
+      />
 
-      <Card elevation={2} sx={{ mb: 3 }}>
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            Add New Application
-          </Typography>
-          <Box component="form" onSubmit={handleSubmit}>
-            <Stack direction={{ xs: 'column', md: 'row' }} spacing={2}>
-              <TextField
-                fullWidth
-                label="Company"
-                value={form.companyName}
-                onChange={(e) => setForm({ ...form, companyName: e.target.value })}
+      <SectionCard
+        title="Add New Application"
+        subtitle="Capture the essentials once, then keep the list updated as you move through stages."
+      >
+        <Box component="form" onSubmit={handleSubmit}>
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(5, minmax(0, 1fr))' },
+              gap: 2
+            }}
+          >
+            <TextField
+              fullWidth
+              label="Company"
+              value={form.companyName}
+              onChange={(e) => setForm({ ...form, companyName: e.target.value })}
+              disabled={submitting}
+            />
+            <TextField
+              fullWidth
+              label="Role"
+              value={form.role}
+              onChange={(e) => setForm({ ...form, role: e.target.value })}
+              disabled={submitting}
+            />
+            <TextField
+              fullWidth
+              type="date"
+              label="Applied Date"
+              value={form.appliedDate}
+              onChange={(e) => setForm({ ...form, appliedDate: e.target.value })}
+              InputLabelProps={{ shrink: true }}
+              disabled={submitting}
+            />
+            <FormControl fullWidth>
+              <InputLabel>Status</InputLabel>
+              <Select
+                value={form.status}
+                label="Status"
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
                 disabled={submitting}
-              />
-              <TextField
-                fullWidth
-                label="Role"
-                value={form.role}
-                onChange={(e) => setForm({ ...form, role: e.target.value })}
-                disabled={submitting}
-              />
-              <TextField
-                fullWidth
-                type="date"
-                label="Applied Date"
-                value={form.appliedDate}
-                onChange={(e) => setForm({ ...form, appliedDate: e.target.value })}
-                InputLabelProps={{ shrink: true }}
-                disabled={submitting}
-              />
-              <FormControl fullWidth>
-                <InputLabel>Status</InputLabel>
-                <Select
-                  value={form.status}
-                  label="Status"
-                  onChange={(e) => setForm({ ...form, status: e.target.value })}
-                  disabled={submitting}
-                >
-                  <MenuItem value="APPLIED">Applied</MenuItem>
-                  <MenuItem value="OA">OA</MenuItem>
-                  <MenuItem value="INTERVIEW">Interview</MenuItem>
-                  <MenuItem value="HR">HR</MenuItem>
-                  <MenuItem value="OFFERED">Offered</MenuItem>
-                  <MenuItem value="REJECTED">Rejected</MenuItem>
-                </Select>
-              </FormControl>
-              <Button
-                type="submit"
-                variant="contained"
-                startIcon={submitting ? <CircularProgress size={20} /> : <AddIcon />}
-                disabled={submitting}
-                sx={{ minWidth: '120px', height: '56px' }}
               >
-                Add
-              </Button>
-            </Stack>
+                <MenuItem value="APPLIED">Applied</MenuItem>
+                <MenuItem value="OA">OA</MenuItem>
+                <MenuItem value="INTERVIEW">Interview</MenuItem>
+                <MenuItem value="HR">HR</MenuItem>
+                <MenuItem value="OFFERED">Offered</MenuItem>
+                <MenuItem value="REJECTED">Rejected</MenuItem>
+              </Select>
+            </FormControl>
+            <Button
+              type="submit"
+              variant="contained"
+              startIcon={submitting ? <CircularProgress size={20} color="inherit" /> : <AddIcon />}
+              disabled={submitting}
+              sx={{ minHeight: 56 }}
+            >
+              {submitting ? 'Adding...' : 'Add Application'}
+            </Button>
           </Box>
-        </CardContent>
-      </Card>
+        </Box>
+      </SectionCard>
 
       {jobs.length === 0 ? (
-        <Card elevation={2}>
-          <CardContent>
-            <Typography variant="h6" align="center" color="text.secondary">
-              No job applications yet. Add your first one above!
-            </Typography>
-          </CardContent>
-        </Card>
+        <SectionCard title="Your job list is empty" subtitle="Add your first application above to start building momentum.">
+          <Box
+            sx={{
+              py: 5,
+              display: 'grid',
+              placeItems: 'center',
+              textAlign: 'center'
+            }}
+          >
+            <Stack spacing={1.5} alignItems="center">
+              <Box
+                sx={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 4,
+                  bgcolor: 'rgba(79, 70, 229, 0.08)',
+                  color: 'primary.main',
+                  display: 'grid',
+                  placeItems: 'center'
+                }}
+              >
+                <WorkIcon />
+              </Box>
+              <Typography variant="h5">No applications yet</Typography>
+              <Typography color="text.secondary">
+                Once you add a role, it will appear here as a clean, scannable card.
+              </Typography>
+            </Stack>
+          </Box>
+        </SectionCard>
       ) : (
-        <TableContainer component={Paper} elevation={2}>
-          <Table>
-            <TableHead>
-              <TableRow sx={{ bgcolor: 'primary.main' }}>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Company</TableCell>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Role</TableCell>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Applied Date</TableCell>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Status</TableCell>
-                <TableCell sx={{ color: 'white', fontWeight: 'bold' }} align="center">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {jobs.map((job) => (
-                <TableRow key={job.id} hover>
-                  <TableCell>{job.companyName}</TableCell>
-                  <TableCell>{job.role}</TableCell>
-                  <TableCell>{job.appliedDate}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={job.status}
-                      color={getStatusColor(job.status)}
-                      size="small"
-                    />
-                  </TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      color="error"
-                      onClick={() => setDeleteDialog({ open: true, jobId: job.id })}
+        <Stack spacing={2}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: { xs: 'flex-start', sm: 'center' },
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 1.5
+            }}
+          >
+            <Typography variant="h4">Applications Overview</Typography>
+            <Chip
+              color="primary"
+              variant="outlined"
+              label={`${jobs.length} ${jobs.length === 1 ? 'application' : 'applications'}`}
+            />
+          </Box>
+
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: 3
+            }}
+          >
+            {jobs.map((job) => (
+              <SectionCard
+                key={job.id}
+                contentSx={{ p: 0 }}
+                sx={{
+                  height: '100%',
+                  overflow: 'hidden',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                  '&:hover': {
+                    transform: 'translateY(-6px)',
+                    boxShadow: 5
+                  }
+                }}
+              >
+                <Box sx={{ p: { xs: 2.5, sm: 3 } }}>
+                  <Stack spacing={2.5}>
+                    <Stack direction="row" justifyContent="space-between" alignItems="flex-start" spacing={2}>
+                      <Box>
+                        <Typography variant="h4" sx={{ mb: 0.75 }}>
+                          {job.companyName}
+                        </Typography>
+                        <Typography color="text.secondary">{job.role}</Typography>
+                      </Box>
+                      <Chip
+                        label={statusVisuals[job.status]?.label || job.status}
+                        color={getStatusColor(job.status)}
+                        size="small"
+                      />
+                    </Stack>
+
+                    <Stack direction="row" spacing={1.25} alignItems="center" color="text.secondary">
+                      <CalendarIcon fontSize="small" />
+                      <Typography variant="body2">Applied on {job.appliedDate}</Typography>
+                    </Stack>
+
+                    <Box
+                      sx={{
+                        p: 1.5,
+                        borderRadius: 3,
+                        bgcolor: 'rgba(79, 70, 229, 0.04)',
+                        border: '1px solid',
+                        borderColor: 'divider'
+                      }}
                     >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                      <Typography variant="body2" color="text.secondary">
+                        Status
+                      </Typography>
+                      <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
+                        {statusVisuals[job.status]?.label || job.status}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <Button
+                        color="error"
+                        variant="outlined"
+                        startIcon={<DeleteIcon />}
+                        onClick={() => setDeleteDialog({ open: true, jobId: job.id })}
+                      >
+                        Delete
+                      </Button>
+                    </Box>
+                  </Stack>
+                </Box>
+              </SectionCard>
+            ))}
+          </Box>
+        </Stack>
       )}
 
       <Dialog open={deleteDialog.open} onClose={() => setDeleteDialog({ open: false, jobId: null })}>
-        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogTitle>Delete job application?</DialogTitle>
         <DialogContent>
-          <Typography>Are you sure you want to delete this job application?</Typography>
+          <Typography color="text.secondary">
+            This removes the application from your tracker. This action cannot be undone.
+          </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDeleteDialog({ open: false, jobId: null })}>Cancel</Button>
-          <Button onClick={handleDelete} color="error" variant="contained">Delete</Button>
+        <DialogActions sx={{ px: 3, pb: 3, gap: 1 }}>
+          <Button onClick={() => setDeleteDialog({ open: false, jobId: null })} variant="outlined">
+            Cancel
+          </Button>
+          <Button onClick={handleDelete} color="error" variant="contained">
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Stack>
   );
 }
 

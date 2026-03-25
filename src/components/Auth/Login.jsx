@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
-import { Box, Card, CardContent, TextField, Button, Typography, Link, CircularProgress } from '@mui/material';
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Link,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
 import { toast } from 'react-toastify';
 import { authService } from '../../services/api';
+import AuthShell from '../UI/AuthShell';
 
 function Login({ setToken, setShowRegister }) {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -34,63 +43,54 @@ function Login({ setToken, setShowRegister }) {
   };
 
   return (
-    <Box sx={{ maxWidth: 400, mx: 'auto', mt: 8 }}>
-      <Card elevation={3}>
-        <CardContent sx={{ p: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom align="center" color="primary">
-            Interview Tracker
-          </Typography>
-          <Typography variant="h6" gutterBottom align="center" color="text.secondary">
-            Login
-          </Typography>
-          
-          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <TextField
-              fullWidth
-              label="Username"
-              value={form.username}
-              onChange={(e) => setForm({ ...form, username: e.target.value })}
-              error={!!errors.username}
-              helperText={errors.username}
-              margin="normal"
-              disabled={loading}
-            />
-            <TextField
-              fullWidth
-              type="password"
-              label="Password"
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              error={!!errors.password}
-              helperText={errors.password}
-              margin="normal"
-              disabled={loading}
-            />
-            <Button
-              fullWidth
-              type="submit"
-              variant="contained"
-              size="large"
-              disabled={loading}
-              sx={{ mt: 3, mb: 2 }}
+    <AuthShell
+      title="Welcome back"
+      subtitle="Log in to review your dashboard and keep your interview search moving."
+    >
+      <Box component="form" onSubmit={handleSubmit}>
+        <Stack spacing={2.5}>
+          <TextField
+            fullWidth
+            label="Username"
+            value={form.username}
+            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            error={!!errors.username}
+            helperText={errors.username}
+            disabled={loading}
+          />
+          <TextField
+            fullWidth
+            type="password"
+            label="Password"
+            value={form.password}
+            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            error={!!errors.password}
+            helperText={errors.password}
+            disabled={loading}
+          />
+          <Button
+            fullWidth
+            type="submit"
+            variant="contained"
+            size="large"
+            disabled={loading}
+          >
+            {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
+          </Button>
+          <Typography align="center" color="text.secondary">
+            Don't have an account?{' '}
+            <Link
+              component="button"
+              type="button"
+              onClick={() => setShowRegister(true)}
+              sx={{ cursor: 'pointer', fontWeight: 700 }}
             >
-              {loading ? <CircularProgress size={24} /> : 'Login'}
-            </Button>
-            <Typography align="center">
-              Don't have an account?{' '}
-              <Link
-                component="button"
-                type="button"
-                onClick={() => setShowRegister(true)}
-                sx={{ cursor: 'pointer' }}
-              >
-                Register
-              </Link>
-            </Typography>
-          </Box>
-        </CardContent>
-      </Card>
-    </Box>
+              Register
+            </Link>
+          </Typography>
+        </Stack>
+      </Box>
+    </AuthShell>
   );
 }
 
